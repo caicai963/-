@@ -31,13 +31,14 @@ $scriptPath = Join-Path $scriptDir "run-epc.ps1"
 $logPath = Join-Path $scriptDir "data" "epc-scrape.log"
 
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File `"$scriptPath`" >> `"$logPath`" 2>&1"
-$trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 10:30AM
+$trigger1 = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 10:30AM
+$trigger2 = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Thursday -At 10:30AM
 $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
 
 try {
-    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force
-    Write-Host "  每周一 10:30 自动抓取已设置" -ForegroundColor Green
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger1, $trigger2 -Principal $principal -Settings $settings -Force
+    Write-Host "  每周一、周四 10:30 自动抓取已设置" -ForegroundColor Green
 } catch {
     Write-Host "  定时任务设置失败: $_" -ForegroundColor Red
     Write-Host "  (请以管理员身份运行此脚本)" -ForegroundColor Yellow
