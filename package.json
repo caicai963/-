@@ -1,0 +1,27 @@
+{
+  "name": "part-time-monitor",
+  "version": "1.0.0",
+  "description": "兼职甄别进度和质量自动监控，推送企微通知",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "run": "npm run build && npm run start",
+    "setup-schedule": "powershell -ExecutionPolicy Bypass -File src/setup-schedule.ps1",
+    "epc": "npm run build && node dist/epc-start.js",
+    "epc:scrape": "npm run build && node dist/epc-scraper.js",
+    "epc:import": "npm run build && node dist/import-mapping.js",
+    "epc:server": "npm run build && node dist/query-server.js",
+    "epc:setup-schedule": "powershell -ExecutionPolicy Bypass -File src/setup-epc-schedule.ps1"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "playwright": "^1.61.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

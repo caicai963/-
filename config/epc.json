@@ -1,0 +1,57 @@
+{
+  "epc": {
+    "baseUrl": "https://eplayer.nie.netease.com",
+    "loginUrl": "https://eplayer.nie.netease.com/#/login",
+    "listUrl": "https://eplayer.nie.netease.com/#/app/epc/index"
+  },
+  "scraper": {
+    "tabs": {
+      "selector": ".el-tabs__item, [role=tab], .tab-item, [class*=tab]",
+      "names": ["待审核", "待支付", "公司结款"]
+    },
+    "listRowSelector": ".ant-table-tbody tr, table tbody tr, .el-table__body tr",
+    "listOrderNoColumn": "td:nth-child(1), .ant-table-row td:first-child, [class*=order]",
+    "detailEntry": {
+      "mode": "click",
+      "rowClick": false,
+      "buttonSelector": "button:has-text(预览), a:has-text(预览), [class*=preview]"
+    },
+    "detail": {
+      "tableSelector": "table, .el-table, [class*=detail] table",
+      "rowSelector": "tbody tr, .el-table__body tr",
+      "pageSize": 10,
+      "cellMapping": {
+        "payee_name": "td:nth-child(1)",
+        "payee_phone": "td:nth-child(3)",
+        "amount": "td:nth-child(9)",
+        "actual_amount": "td:nth-child(10)",
+        "status_node": "td:nth-child(11)",
+        "paid_time": "td:nth-child(12)"
+      }
+    },
+    "pagination": {
+      "nextButton": ".el-pager li:last-child, [class*=next]:not([class*=disabled]):not([class*=is-disabled]), button[class*=next]"
+    }
+  },
+  "mapping": {
+    "type": "popo_doc",
+    "popo_doc": {
+      "docId": "7380efa1b4c44f1fadffd703f47ad471"
+    },
+    "feishu_share": {
+      "shareLink": "https://xxx.feishu.cn/sheets/TOKEN?sheet=Sheet1",
+      "sheetName": "Sheet1"
+    },
+    "local": {
+      "file": "./data/mapping.xlsx"
+    },
+    "columns": {
+      "external_order_no": "单号",
+      "internal_order_no": "epc单号"
+    }
+  },
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  }
+}

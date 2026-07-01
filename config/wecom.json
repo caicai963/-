@@ -1,0 +1,4 @@
+{
+  "webhookUrl": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_WEBHOOK_KEY_HERE",
+  "description": "请替换 YOUR_WEBHOOK_KEY_HERE 为你的企微群机器人 webhook key"
+}

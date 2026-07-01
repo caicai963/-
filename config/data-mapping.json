@@ -1,0 +1,37 @@
+{
+  "dataSource": {
+    "type": "feishu_share",
+    "shareLink": "https://xxx.feishu.cn/sheets/TOKEN?sheet=Sheet1",
+    "sheetName": "Sheet1",
+    "feishu": {
+      "appId": "YOUR_APP_ID",
+      "appSecret": "YOUR_APP_SECRET",
+      "spreadsheetToken": "YOUR_SHEET_TOKEN",
+      "sheetId": "Sheet1"
+    },
+    "local": {
+      "type": "excel",
+      "path": "./data/records.xlsx",
+      "sheetName": "Sheet1"
+    }
+  },
+  "columnMapping": {
+    "需求名": "requirement_name",
+    "兼职人": "part_time_name",
+    "甄别状态": "review_status",
+    "甄别时间": "review_time",
+    "身份证号": "id_card",
+    "银行卡号": "bank_card",
+    "手机号": "phone",
+    "违规记录": "violation_record",
+    "黑名单检查": "blacklist_check",
+    "学历": "education",
+    "匹配度评估": "match_assessment",
+    "面试评分": "interview_score",
+    "面试评语": "interview_comment",
+    "审批状态": "approval_status",
+    "复核人": "reviewer",
+    "甄别时效（天）": "review_days",
+    "备注": "remark"
+  }
+}

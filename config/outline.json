@@ -1,0 +1,76 @@
+{
+  "checkItems": [
+    {
+      "id": "identity_verify",
+      "name": "身份核验",
+      "weight": 10,
+      "description": "核实兼职人员身份证、银行卡等基本信息是否完备",
+      "rules": [
+        { "field": "id_card", "required": true, "pattern": "^\\d{17}[\\dXx]$", "message": "身份证号格式不正确" },
+        { "field": "bank_card", "required": true, "minLength": 16, "message": "银行卡号缺失或长度异常" },
+        { "field": "phone", "required": true, "pattern": "^1\\d{10}$", "message": "手机号格式不正确" }
+      ]
+    },
+    {
+      "id": "background_check",
+      "name": "背景调查",
+      "weight": 15,
+      "description": "是否有不良记录、违规历史等",
+      "rules": [
+        { "field": "violation_record", "required": true, "message": "未填写违规记录核查结果" },
+        { "field": "blacklist_check", "required": true, "message": "未进行黑名单检查" }
+      ]
+    },
+    {
+      "id": "qualification",
+      "name": "资质审核",
+      "weight": 10,
+      "description": "核实学历、工作经历与岗位匹配度",
+      "rules": [
+        { "field": "education", "required": true, "message": "未填写学历信息" },
+        { "field": "match_assessment", "required": true, "message": "未进行岗位匹配度评估" }
+      ]
+    },
+    {
+      "id": "interview_record",
+      "name": "面试记录",
+      "weight": 15,
+      "description": "面试评价、评分是否完整",
+      "rules": [
+        { "field": "interview_score", "required": true, "min": 0, "max": 100, "message": "面试评分缺失或异常" },
+        { "field": "interview_comment", "required": true, "minLength": 10, "message": "面试评语过于简略（至少10字）" }
+      ]
+    },
+    {
+      "id": "data_completeness",
+      "name": "数据完整性",
+      "weight": 25,
+      "description": "检查各必填字段是否填写完整",
+      "rules": [
+        { "field": "requirement_name", "required": true, "message": "需求名为空" },
+        { "field": "part_time_name", "required": true, "message": "兼职人名为空" },
+        { "field": "review_status", "required": true, "message": "甄别状态未标记" }
+      ]
+    },
+    {
+      "id": "compliance",
+      "name": "合规性检查",
+      "weight": 15,
+      "description": "检查甄别流程是否符合规范要求",
+      "rules": [
+        { "field": "approval_status", "required": true, "message": "审批状态不明确" },
+        { "field": "reviewer", "required": true, "message": "缺少复核人签字" }
+      ]
+    },
+    {
+      "id": "timeliness",
+      "name": "时效性检查",
+      "weight": 10,
+      "description": "检查甄别是否在时效要求内完成",
+      "rules": [
+        { "field": "review_days", "required": false, "max": 3, "message": "甄别超时（超过3天）" }
+      ]
+    }
+  ],
+  "passThreshold": 80
+}

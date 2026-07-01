@@ -1,0 +1,12 @@
+node_modules/
+dist/
+data/epc.db*
+data/epc-auth.json
+data/mapping.csv
+data/records.xlsx
+data/epc-scrape.log
+ngrok.exe
+.env
+*.log
+项目说明.md
+run-epc.ps1
