@@ -6,6 +6,7 @@ import { upsertPayments, EpcPayment, getStats } from './db';
 
 const POPO_DOC_ID = '7380efa1b4c44f1fadffd703f47ad471';
 const SHEET_ID = '1';
+const MAPPING_SHEET_ID = '0';
 
 function popoExec(command: object): string {
   const cmdJson = JSON.stringify(command);
@@ -22,17 +23,10 @@ function popoExec(command: object): string {
   }
 }
 
-function parsePopoResult(output: string): any {
-  const result = JSON.parse(output);
-  let node: any = result;
-  for (let i = 0; i < 10 && node && !node.sheets; i++) node = node.data;
-  return node;
-}
-
-export function readSheet1Data(): { cells: Record<string, any>; rowCount: number; colCount: number } {
-  const output = popoExec({ type: 'workbook.getFullData', payload: { sheetId: SHEET_ID } });
+function readSheetData(sheetId: string): { cells: Record<string, any>; rowCount: number; colCount: number } {
+  const output = popoExec({ type: 'workbook.getFullData', payload: { sheetId } });
   const data = parsePopoResult(output);
-  if (!data?.sheets?.[0]) throw new Error('读取Sheet2失败');
+  if (!data?.sheets?.[0]) throw new Error(`读取Sheet${sheetId}失败`);
   const sheet = data.sheets[0];
   const cells: Record<string, any> = sheet.cells || {};
   let maxRow = 0;
@@ -41,6 +35,17 @@ export function readSheet1Data(): { cells: Record<string, any>; rowCount: number
     if (!isNaN(r) && r > maxRow) maxRow = r;
   }
   return { cells, rowCount: maxRow + 1, colCount: sheet.colCount || 0 };
+}
+
+function parsePopoResult(output: string): any {
+  const result = JSON.parse(output);
+  let node: any = result;
+  for (let i = 0; i < 10 && node && !node.sheets; i++) node = node.data;
+  return node;
+}
+
+export function readSheet1Data(): { cells: Record<string, any>; rowCount: number; colCount: number } {
+  return readSheetData(SHEET_ID);
 }
 
 export function appendToSheet2(records: Omit<EpcPayment, 'updated_at'>[], submitter: string): void {
@@ -128,12 +133,15 @@ export function appendToSheet2(records: Omit<EpcPayment, 'updated_at'>[], submit
 export function writeUnmappedToSheet1(unmappedOrders: string[]): void {
   if (unmappedOrders.length === 0) return;
 
-  const { cells, rowCount } = readSheet1Data();
+  const { cells, rowCount } = readSheetData(MAPPING_SHEET_ID);
 
   const existingEpcs = new Set<string>();
+  let lastDataRow = 0;
   for (let r = 0; r < rowCount; r++) {
-    const val = String(cells[`${r},1`] || '').trim();
-    if (val) existingEpcs.add(val);
+    const colA = String(cells[`${r},0`] || '').trim();
+    const colB = String(cells[`${r},1`] || '').trim();
+    if (colB) existingEpcs.add(colB);
+    if (colA || colB) lastDataRow = r;
   }
 
   const newOrders = unmappedOrders.filter(o => !existingEpcs.has(o));
@@ -143,14 +151,14 @@ export function writeUnmappedToSheet1(unmappedOrders: string[]): void {
   }
 
   const batch: { row: number; col: number; value: string }[] = [];
-  let nextRow = rowCount;
+  let nextRow = lastDataRow + 1;
   for (const orderNo of newOrders) {
     batch.push({ row: nextRow, col: 1, value: orderNo });
     nextRow++;
   }
 
-  console.log(`  写入 ${newOrders.length} 个未映射单号到Sheet1 B列...`);
-  const resp = popoExec({ type: 'sheet.batchSetCells', payload: { sheetId: SHEET_ID, cells: batch } });
+  console.log(`  写入 ${newOrders.length} 个未映射单号到Sheet1 B列（sheetId=${MAPPING_SHEET_ID}，从第${lastDataRow + 1}行开始）...`);
+  const resp = popoExec({ type: 'sheet.batchSetCells', payload: { sheetId: MAPPING_SHEET_ID, cells: batch } });
   const r = JSON.parse(resp);
   let ok = false;
   let node: any = r;

@@ -1,7 +1,7 @@
 # EPC 查询服务 - 开机自启 + 每天9点重启（需以管理员身份运行一次）
 
 $taskName = "EPC-QueryServer"
-$scriptPath = Join-Path $PSScriptRoot "start-server.ps1"
+$scriptPath = Join-Path $PSScriptRoot "start-all.ps1"
 
 Write-Host "设置 EPC 查询服务..." -ForegroundColor Cyan
 
